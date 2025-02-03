@@ -1,4 +1,5 @@
 using Darvyn_Lavandier_P1_AP1.Components;
+using RegistroTecnico.DAL;
 
 namespace Darvyn_Lavandier_P1_AP1
 {
@@ -13,6 +14,9 @@ namespace Darvyn_Lavandier_P1_AP1
                 .AddInteractiveServerComponents();
 
             var app = builder.Build();
+
+            //Obtenemos el ConStr para usarlo en el contexto
+            var ConStr = builder.Configuration.GetConnectionString("SqlConStr");
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
