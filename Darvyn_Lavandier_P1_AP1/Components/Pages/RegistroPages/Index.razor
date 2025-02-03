@@ -1,0 +1,108 @@
+﻿@page "/Registro/Index"
+@rendermode InteractiveServer
+@using DarvynLuisLavandier_P1_AP1.Service
+@using DarvynLuisLavandier_P1_AP1.Models
+@inject RegistroService RegistroService
+@inject NavigationManager navigation
+
+<EditForm Model="ListaRegistros" class="border shadow-lg p-3 rounded">
+    <div class="card-header bg-primary text-white text-center py-2 rounded">
+        <h3 class="mb-0 font-weight-bold">Consulta Registros</h3>
+    </div>
+    <div class="card-body">
+        <div class="row mb-3 align-items-end">
+            <div class="col-md-3">
+                <label for="Filtro" class="form-label">Filtrar por:</label>
+                <select @bind="filtro" class="form-select">
+                    <option value="id">ID</option>
+                    <option value="nombre">Nombre</option>
+                    <option value="fecha">Fecha</option>
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="ValorFiltro" class="form-label">Búsqueda:</label>
+                <div class="input-group">
+                    <input @bind="valorFiltro" class="form-control" placeholder="Buscar" />
+                    <button @onclick="Buscar" class="btn btn-outline-primary" type="button">
+                        <span class="bi bi-search"></span> Buscar
+                    </button>
+                </div>
+            </div>
+            <div class="col-md-3 text-end">
+                <a href="/Registro/Create" class="btn btn-success" type="button">
+                    <span class="bi bi-floppy"></span> Crear
+                </a>
+            </div>
+        </div>
+    </div>
+    <table class="table table-bordered text-center">
+        <thead class="bg-primary text-white">
+            <tr>
+                <th>Id</th>
+                <th>Nombre</th>
+                <th>Editar</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var registro in ListaRegistros)
+            {
+                <tr>
+                    <td>@registro.Id</td>
+                    <td>@registro.Nombres</td>
+                    <td>
+                        <a class="btn btn-outline-primary" href="/Registro/Details/@registro.Id">
+                            <span class="bi bi-info-circle-fill"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-success" href="/Registro/Edit/@registro.Id">
+                            <span class="bi bi-marker-tip"></span>
+                        </a>
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-warning" href="/Registro/Delete/@registro.Id">
+                            <span class="bi bi-dash-circle-fill"></span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</EditForm>
+
+@code {
+    public Registros Registro = new Registros();
+    public List<Registros> ListaRegistros = new List<Registros>();
+    private string filtro = "id";
+    private string valorFiltro = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        ListaRegistros = await RegistroService.Listar(r => true);
+    }
+
+    public async Task Guardar()
+    {
+        var guardo = await RegistroService.Guardar(Registro);
+    }
+
+    private async Task Buscar()
+    {
+        if (!string.IsNullOrWhiteSpace(valorFiltro))
+        {
+            if (filtro == "id" && int.TryParse(valorFiltro, out int RegistroId))
+            {
+                ListaRegistros = await RegistroService.Listar(r => r.Id == RegistroId);
+            }
+            else if (filtro == "nombre")
+            {
+                ListaRegistros = await RegistroService.Listar(r => r.Nombres.Contains(valorFiltro));
+            }
+        }
+        else
+        {
+            ListaRegistros = await RegistroService.Listar(r => true);
+        }
+    }
+}
