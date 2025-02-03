@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-
-namespace DarvynLuisLavandier_AP1_P1.Models
+namespace DarvynLuisLavandier_P1_AP1.Models
 {
     public class Registros
     {

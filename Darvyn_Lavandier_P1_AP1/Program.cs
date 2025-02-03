@@ -1,5 +1,5 @@
 using Darvyn_Lavandier_P1_AP1.Components;
-using RegistroTecnico.DAL;
+using DarvynLuisLavandier_P1_AP1.DAL;
 
 namespace Darvyn_Lavandier_P1_AP1
 {
