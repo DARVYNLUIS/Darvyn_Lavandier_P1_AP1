@@ -3,7 +3,7 @@ using Darvyn_Lavandier_P1_AP1.DAL;
 using Microsoft.EntityFrameworkCore;
 namespace Darvyn_Lavandier_P1_AP1.Services
 {
-    public class Servicio(IDbContextFactory<Contexto> DbFactory)
+    public class RegistroService(IDbContextFactory<Contexto> DbFactory)
     {
        
         public async Task<bool> Guardar()

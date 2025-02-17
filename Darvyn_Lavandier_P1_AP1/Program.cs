@@ -1,4 +1,7 @@
 using Darvyn_Lavandier_P1_AP1.Components;
+using Darvyn_Lavandier_P1_AP1.DAL;
+using Darvyn_Lavandier_P1_AP1.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace Darvyn_Lavandier_P1_AP1
 {
@@ -11,6 +14,15 @@ namespace Darvyn_Lavandier_P1_AP1
             // Add services to the container.
             builder.Services.AddRazorComponents()
                 .AddInteractiveServerComponents();
+
+            //obtenemos el ConStr para usarlocon el contexto
+            var ConSrt = builder.Configuration.GetConnectionString("SqlConStr");
+
+            //Agregar contexto al builder con ConStr
+            builder.Services.AddDbContextFactory<Contexto>(o => o.UseSqlServer(ConSrt));
+
+            //Inyectar del service
+            builder.Services.AddScoped<RegistroService>();
 
             var app = builder.Build();
 
