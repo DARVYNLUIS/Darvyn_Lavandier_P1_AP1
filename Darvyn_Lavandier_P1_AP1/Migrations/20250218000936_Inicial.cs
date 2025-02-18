@@ -18,9 +18,9 @@ namespace Darvyn_Lavandier_P1_AP1.Migrations
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Persona = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    FechaCreacion = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    observacion = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    monto = table.Column<int>(type: "int", nullable: false)
+                    Observacion = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Monto = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {

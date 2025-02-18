@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Darvyn_Lavandier_P1_AP1.Migrations
 {
     [DbContext(typeof(Contexto))]
-    [Migration("20250217225004_Inicial")]
+    [Migration("20250218000936_Inicial")]
     partial class Inicial
     {
         /// <inheritdoc />
@@ -33,17 +33,17 @@ namespace Darvyn_Lavandier_P1_AP1.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("FechaCreacion")
+                    b.Property<DateTime>("Fecha")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Persona")
+                    b.Property<int>("Monto")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Observacion")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("monto")
-                        .HasColumnType("int");
-
-                    b.Property<string>("observacion")
+                    b.Property<string>("Persona")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
