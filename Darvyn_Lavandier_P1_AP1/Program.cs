@@ -1,6 +1,6 @@
 using Darvyn_Lavandier_P1_AP1.Components;
 using Darvyn_Lavandier_P1_AP1.DAL;
-using Darvyn_Lavandier_P1_AP1.Services;
+using Darvyn_Lavandier_P1_AP1.Service;
 using Microsoft.EntityFrameworkCore;
 
 namespace Darvyn_Lavandier_P1_AP1

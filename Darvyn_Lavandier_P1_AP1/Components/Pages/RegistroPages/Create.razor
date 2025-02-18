@@ -1,5 +1,87 @@
-﻿<h3>Create</h3>
+﻿@page "/Registro/Create"
+@using Darvyn_Lavandier_P1_AP1.Service
+@using Darvyn_Lavandier_P1_AP1.Models
+@inject RegistroService RegistroService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Crear Aporte</PageTitle>
+
+<EditForm Model="@Registros" OnValidSubmit="Guardar">
+    <DataAnnotationsValidator />
+    <h3><i class="fas fa-clipboard-list"></i> Crear Aportes</h3>
+
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <div class="alert alert-danger">@errorMessage</div>
+    }
+
+    <div class="card-body">
+        @* Nombres *@
+        <div class="mb-3">
+            <label for="Persona" class="form-label">Persona:</label>
+            <InputText id="Nombres" @bind-Value="Registros.Persona" class="form-control" />
+            <ValidationMessage For="@(() => Registros.Persona)" />
+        </div>
+        @* Observacion *@
+        <div class="mb-3">
+            <label for="Observacion" class="form-label">Observacion:</label>
+            <InputText id="Nombres" @bind-Value="Registros.Observacion" class="form-control" />
+            <ValidationMessage For="@(() => Registros.Observacion)" />
+        </div>
+        @* Monto *@
+        <div class="mb-3">
+            <label for="Monto" class="form-label">Monto:</label>
+            <InputNumber id="Monto" @bind-Value="Registros.Monto" class="form-control" />
+            <ValidationMessage For="@(() => Registros.Monto)" />
+        </div>
+    </div>
+
+    <div class="card-footer bg-light d-flex justify-content-center mt-3">
+        <div class="btn-group">
+            <button type="button" class="btn btn-outline-primary ml-2" @onclick="Nuevo"><span class="bi bi-plus"></span> Nuevo </button>
+            <button type="submit" class="btn btn-outline-success ml-2"><span class="bi bi-check-circle-fill"></span> Guardar </button>
+            <a href="/Registro/Index" class="btn btn-outline-danger ml-2"><span class="bi bi-arrow-bar-left"></span> Retroceder </a>
+        </div>
+    </div>
+</EditForm>
 
 @code {
+    public Registros Registros { get; set; }
+    private string errorMessage;
 
+    protected override async Task OnInitializedAsync()
+    {
+        Registros = new Registros();
+    }
+
+    public void Nuevo()
+    {
+        Registros = new Registros();
+        errorMessage = null;
+    }
+
+    public async Task Guardar()
+    {
+        try
+        {
+            if (Registros == null)
+            {
+                throw new InvalidOperationException("El objeto Registros no está inicializado.");
+            }
+
+
+            errorMessage = null;
+            bool guardo = await RegistroService.Guardar(Registros);
+            if (guardo)
+            {
+                Nuevo();
+                NavigationManager.NavigateTo("/Registro/Index");
+            }
+        }
+        catch (Exception ex)
+        {
+            errorMessage = $"Error al guardar el registro: {ex.Message}";
+        }
+    }
 }
