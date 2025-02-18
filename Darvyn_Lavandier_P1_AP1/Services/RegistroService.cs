@@ -1,45 +1,75 @@
-﻿using System.Linq.Expressions;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 using Darvyn_Lavandier_P1_AP1.DAL;
-using Microsoft.EntityFrameworkCore;
-namespace Darvyn_Lavandier_P1_AP1.Services
+using Darvyn_Lavandier_P1_AP1.Models;
+
+namespace Darvyn_Lavandier_P1_AP1.Service
 {
-    public class RegistroService(IDbContextFactory<Contexto> DbFactory)
+    public class RegistroService
     {
-       
-        public async Task<bool> Guardar()
+        private readonly Contexto _context;
+        public RegistroService(Contexto contexto) => _context = contexto;
+
+        public async Task<bool> Guardar(Registros registros)
         {
-            return true;
-        }
-  
-        public async Task<bool> Existe()
-        {
-            return true;
-        }
-  
-        public async Task<bool> Insertar()
-        {
-            return false;
+            if (!await Existe(registros.Id))
+                return await Insertar(registros);
+            else
+                return await Modificar(registros);
         }
 
-        public async Task<bool> Modificar()
+        public async Task<bool> Insertar(Registros registros)
         {
-            return true;
-        }
-     
-        public async Task<bool> Buscar(int id)
-        {
-
-            return true;
+            _context.Registros.Add(registros);
+            return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> Eliminar()
+        public async Task<bool> Modificar(Registros registros)
         {
-            return true;
+            _context.Update(registros);
+            return await _context.SaveChangesAsync() > 0;
         }
 
-        public async Task<bool> Listar()
+        public async Task<bool> Existe(int id)
         {
-            return true;
+            return await _context.Registros
+                .AnyAsync(p => p.Id == id);
+        }
+
+        public async Task<bool> Existe(string? nombre, int? id = null)
+        {
+            return await _context.Registros
+                .AnyAsync(p => p.Persona == nombre);
+        }
+
+        public async Task<bool> Existe(int id, string? nombre)
+        {
+            return await _context.Registros
+                .AnyAsync(p => p.Id != id && p.Persona == nombre);
+        }
+
+
+        public async Task<bool> Eliminar(int id)
+        {
+            var registros = await _context.Registros
+                .Where(p => p.Id == id)
+                .ExecuteDeleteAsync();
+            return registros > 0;
+        }
+
+        public async Task<Registros?> Buscar(int id)
+        {
+            return await _context.Registros
+                .AsNoTracking()
+                .FirstOrDefaultAsync(p => p.Id == id);
+        }
+
+        public async Task<List<Registros>> Listar(Expression<Func<Registros, bool>> criterio)
+        {
+            return await _context.Registros
+                .AsNoTracking()
+                .Where(criterio)
+                .ToListAsync();
         }
     }
 }
