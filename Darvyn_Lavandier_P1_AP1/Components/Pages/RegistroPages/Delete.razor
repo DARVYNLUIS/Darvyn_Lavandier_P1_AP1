@@ -1,0 +1,75 @@
+﻿@page "/Registro/Delete"
+@page "/Registro/Delete/{RegistroId:int}"
+@using Darvyn_Lavandier_P1_AP1.Service
+@using Darvyn_Lavandier_P1_AP1.Models
+@inject RegistroService RegistroService
+@inject NavigationManager NavigationManager
+@rendermode InteractiveServer
+
+<PageTitle>Eliminar Registro</PageTitle>
+
+@if (Registro != null)
+{
+    <div class="container">
+        <div class="card shadow-header">
+            @*Header*@
+            <div class="card-header bg-primary text-white text-center py-2 rounded">
+                <h3><strong>Eliminar Registro</strong></h3>
+            </div>
+
+            @*Body*@
+            <div class="card-body">
+                <h5><strong>¿Estas seguro de que quieres eliminar este registro?</strong></h5>
+                <div class="mb-1">
+                    <p class="mb-0">RegistroId: @Registro.Id</p>
+                </div>
+                <div class="mb-1">
+                    <p class="mb-0">Nombres: @Registro.Fecha</p>
+                </div>
+                <div class="mb-1">
+                    <p class="mb-0">Nombres: @Registro.Persona</p>
+                </div>
+                <div class="mb-1">
+                    <p class="mb-0">Monto: @Registro.Monto</p>
+                </div>
+            </div>
+
+            @*Footer*@
+            <div class="card-footer">
+                <button type="button" class="btn btn-outline-danger" @onclick="EliminarRegistro"><i class="bi bi-trash-fill"></i> Eliminar</button>
+                <a type="button" href="/Registro/Index/" class="btn btn-outline-danger"><span class="bi bi-arrow-bar-left"></span> Volver </a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <p>Registro no encontrado.</p>
+}
+
+@code {
+    [Parameter]
+    public int RegistroId { get; set; }
+    public Registros? Registro { get; set; } = new Registros();
+
+    protected override async Task OnInitializedAsync()
+    {
+        if (RegistroId != 0)
+        {
+            Registro = await RegistroService.Buscar(RegistroId);
+        }
+    }
+
+    public async Task EliminarRegistro()
+    {
+        if (RegistroId == 0 || Registro == null)
+        {
+            return;
+        }
+
+        if (await RegistroService.Eliminar(RegistroId))
+        {
+            NavigationManager.NavigateTo("/Registro/Index");
+        }
+    }
+}
