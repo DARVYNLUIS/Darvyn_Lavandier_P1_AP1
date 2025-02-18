@@ -10,7 +10,7 @@
 
 <div class="card shadow-lg">
     <div class="card-header text-center titulo-fondo-azul-borde-negro">
-        <h3><strong>Listado de Registros</strong></h3>
+        <h3><strong>Listado de Aportes</strong></h3>
     </div>
 
     <div class="card-body">
@@ -61,7 +61,7 @@
                     <td>@registro.Id</td>
                     <td>@registro.Fecha</td>
                     <td>@registro.Persona</td>
-                    <td>@registro.Monto</td>
+                    <td>@($"{registro.Monto:N2}")</td>
                     <td>
                         <a class="btn btn-outline-warning" href="/Registro/Edit/@registro.Id">
                             <span class="bi bi-pencil-square"></span>
@@ -79,6 +79,7 @@
     <div class="card-footer text-end">
 
     </div>
+
 </div>
 
 @code {
@@ -107,7 +108,7 @@
 
                 ListaRegistros = await RegistroService.Listar(p => p.Id == RegistroId);
             }
-            else if (filtro == "nombres")
+            else if (filtro == "persona")
             {
 
                 ListaRegistros = await RegistroService.Listar(p => p.Persona.Contains(valorFiltro));

@@ -26,9 +26,15 @@
             </div>
 
             <div class="mb-3">
-                <label for="Nombres" class="form-label">Nombres:</label>
+                <label for="Persona" class="form-label">Persona:</label>
                 <InputText @bind-Value="Registro.Persona" class="form-control" />
                 <ValidationMessage For="@(() => Registro.Persona)" />
+            </div>
+
+            <div class="mb-3">
+                <label for="Observacion" class="form-label">Observacion:</label>
+                <InputText @bind-Value="Registro.Observacion" class="form-control" />
+                <ValidationMessage For="@(() => Registro.Observacion)" />
             </div>
 
             <div class="mb-3">

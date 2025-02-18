@@ -6,7 +6,7 @@
 @inject NavigationManager NavigationManager
 @rendermode InteractiveServer
 
-<PageTitle>Eliminar Registro</PageTitle>
+<PageTitle>Eliminar Aporte</PageTitle>
 
 @if (Registro != null)
 {
@@ -19,15 +19,15 @@
 
             @*Body*@
             <div class="card-body">
-                <h5><strong>¿Estas seguro de que quieres eliminar este registro?</strong></h5>
+                <h5><strong>¿Estas seguro de que quieres eliminar este Aporte?</strong></h5>
                 <div class="mb-1">
                     <p class="mb-0">RegistroId: @Registro.Id</p>
                 </div>
                 <div class="mb-1">
-                    <p class="mb-0">Nombres: @Registro.Fecha</p>
+                    <p class="mb-0">Fecha: @Registro.Fecha</p>
                 </div>
                 <div class="mb-1">
-                    <p class="mb-0">Nombres: @Registro.Persona</p>
+                    <p class="mb-0">Persona: @Registro.Persona</p>
                 </div>
                 <div class="mb-1">
                     <p class="mb-0">Monto: @Registro.Monto</p>
