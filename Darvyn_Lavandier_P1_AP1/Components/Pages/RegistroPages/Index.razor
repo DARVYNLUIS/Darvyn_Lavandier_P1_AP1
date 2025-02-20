@@ -5,81 +5,80 @@
 @inject RegistroService RegistroService
 @inject NavigationManager navigation
 
-
 <PageTitle>Listado de Aportes</PageTitle>
 
-<div class="card shadow-lg">
-    <div class="card-header text-center titulo-fondo-azul-borde-negro">
-        <h3><strong>Listado de Aportes</strong></h3>
-    </div>
+<div class="container mt-4">
+    <div class="card shadow-lg">
+        <div class="card-header text-center titulo-fondo-azul-borde-negro">
+            <h3><strong>Listado de Aportes</strong></h3>
+        </div>
 
-    <div class="card-body">
-        <div class="row mb-3 align-items-end">
-            <div class="col-md-3">
-                <label for="Filtro" class="form-label">Filtrar por:</label>
-                <select @bind="filtro" class="form-select">
-                    <option value="id">ID</option>
-                    <option value="personas">Personas</option>
-                    <option value="monto">Monto</option>
+        <div class="card-body">
+            <div class="row mb-3 align-items-end">
+                <div class="col-md-3">
+                    <label for="Filtro" class="form-label">Filtrar por:</label>
+                    <select @bind="filtro" class="form-select">
+                        <option value="id">ID</option>
+                        <option value="persona">Persona</option> 
+                        <option value="monto">Monto</option>
+                    </select>
+                </div>
 
-                </select>
-            </div>
+                <div class="col-md-6">
+                    <label for="ValorFiltro" class="form-label">Búsqueda:</label>
+                    <div class="input-group">
+                        <input @bind="valorFiltro" class="form-control" placeholder="Buscar" />
+                        <button @onclick="Buscar" class="btn btn-outline-primary" type="button">
+                            <span class="bi bi-search"></span>
+                        </button>
+                    </div>
+                </div>
 
-            <div class="col-md-6">
-                <label for="ValorFiltro" class="form-label">Búsqueda:</label>
-                <div class="input-group">
-                    <input @bind="valorFiltro" class="form-control" placeholder="Buscar" />
-                    <button @onclick="Buscar" class="btn btn-outline-primary" type="button">
-                        <span class="bi bi-search"></span>
-                    </button>
+                <div class="col-md-3 text-end">
+                    <a href="/Registro/Create" class="btn btn-success">
+                        <span class="bi bi-plus-lg"></span> Crear
+                    </a>
                 </div>
             </div>
 
-            <div class="col-md-1 text-end">
-                <a href="/Registro/Create" class="btn btn-success" type="button">
-                    <span class="bi bi-plus-lg"></span> Crear
-                </a>
-            </div>
+            <table class="table table-bordered text-center mt-4">
+                <thead class="bg-primary text-white">
+                    <tr>
+                        <th>Id</th>
+                        <th>Persona</th>
+                        <th>Monto</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var registro in ListaRegistros)
+                    {
+                        <tr>
+                            <td>@registro.Id</td>
+                            <td>@registro.Persona</td>
+                            <td>@($"{registro.Monto:N2}")</td>
+                            <td>
+                                <a class="btn btn-outline-warning" href="/Registro/Edit/@registro.Id">
+                                    <span class="bi bi-pencil-square"></span>
+                                </a>
+                            </td>
+                            <td>
+                                <a class="btn btn-outline-danger" href="/Registro/Delete/@registro.Id">
+                                    <span class="bi bi-trash"></span>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="card-footer d-flex justify-content-between">
+            <p><strong>Total de Aportes: </strong>@ListaRegistros.Count</p>
+            <p><strong>Total: @CalcularTotal().ToString("N2")</strong></p>
         </div>
     </div>
-
-    <table class="table table-bordered text-center mt-4">
-        <thead class="bg-primary text-white">
-            <tr>
-                <th>Id</th>
-                <th>Fecha</th>
-                <th>Persona</th>
-                <th>Monto</th>
-                <th>Editar</th>
-                <th>Eliminar</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var registro in ListaRegistros)
-            {
-                <tr>
-                    <td>@registro.Id</td>
-                    <td>@registro.Fecha</td>
-                    <td>@registro.Persona</td>
-                    <td>@($"{registro.Monto:N2}")</td>
-                    <td>
-                        <a class="btn btn-outline-warning" href="/Registro/Edit/@registro.Id">
-                            <span class="bi bi-pencil-square"></span>
-                        </a>
-                    </td>
-                    <td>
-                        <a class="btn btn-outline-danger" href="/Registro/Delete/@registro.Id">
-                            <span class="bi bi-trash"></span>
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
-    <div class="card-footer text-end">
-
-    </div>
-
 </div>
 
 @code {
@@ -93,32 +92,41 @@
         ListaRegistros = await RegistroService.Listar(c => true);
     }
 
-    public async Task Guardar()
+    private decimal CalcularTotal()
     {
-
-        var guardo = await RegistroService.Guardar(Registros);
+        return ListaRegistros.Sum(i => (decimal)(i.Monto ?? 0));
     }
 
     private async Task Buscar()
     {
-        if (!string.IsNullOrWhiteSpace(valorFiltro))
+        if (string.IsNullOrWhiteSpace(valorFiltro))
         {
-            if (filtro == "id" && int.TryParse(valorFiltro, out int RegistroId))
-            {
-
-                ListaRegistros = await RegistroService.Listar(p => p.Id == RegistroId);
-            }
-            else if (filtro == "persona")
-            {
-
-                ListaRegistros = await RegistroService.Listar(p => p.Persona.Contains(valorFiltro));
-            }
-
+            ListaRegistros = await RegistroService.Listar(p => true);
         }
         else
         {
+            switch (filtro)
+            {
+                case "id":
+                    if (int.TryParse(valorFiltro, out int idBuscado))
+                    {
+                        ListaRegistros = await RegistroService.Listar(p => p.Id == idBuscado);
+                    }
+                    break;
 
-            ListaRegistros = await RegistroService.Listar(p => true);
+                case "persona":
+                    ListaRegistros = await RegistroService.Listar(p => p.Persona != null && p.Persona.ToLower().Contains(valorFiltro.ToLower()));
+                    break;
+
+                case "monto":
+                    if (decimal.TryParse(valorFiltro, out decimal montoBuscado))
+                    {
+                        ListaRegistros = await RegistroService.Listar(p => p.Monto == montoBuscado);
+                    }
+                    break;
+            }
         }
+
+        StateHasChanged(); 
     }
 }

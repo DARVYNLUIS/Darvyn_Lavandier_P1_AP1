@@ -7,15 +7,16 @@ namespace Darvyn_Lavandier_P1_AP1.Models
         public int Id { get; set; }
 
         [Required(ErrorMessage = "El nombre es obligatorio")]
+        [RegularExpression(@"^[a-zA-Z''-'\s]{1,40}$", ErrorMessage = "Solo se permiten letras")]
         public string? Persona { get; set; }
 
-        [Required(ErrorMessage = "La observacion es obligatorio")]
+        [Required(ErrorMessage = "Este es un campo obligatorio")]
         public string? Observacion { get; set; }
 
         public DateTime Fecha { get; set; } = DateTime.Now;
 
 
-          [Required(ErrorMessage = "El monto es obligatorio")]
+        [Required(ErrorMessage = "El monto es obligatorio")]
         public int? Monto { get; set; }
 
     }

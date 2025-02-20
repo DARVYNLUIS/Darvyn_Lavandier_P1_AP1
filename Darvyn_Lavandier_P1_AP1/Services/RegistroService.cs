@@ -26,7 +26,9 @@ namespace Darvyn_Lavandier_P1_AP1.Service
 
         public async Task<bool> Modificar(Registros registros)
         {
-            _context.Update(registros);
+            var local = _context.Registros.Local
+             .FirstOrDefault(i => i.Id == registros.Id);
+            _context.Entry(registros).State = EntityState.Modified;
             return await _context.SaveChangesAsync() > 0;
         }
 
@@ -62,6 +64,10 @@ namespace Darvyn_Lavandier_P1_AP1.Service
             return await _context.Registros
                 .AsNoTracking()
                 .FirstOrDefaultAsync(p => p.Id == id);
+        }
+        public async Task<bool> ExistePersona(string nombre)
+        {
+            return await _context.Registros.AnyAsync(r => r.Persona == nombre);
         }
 
         public async Task<List<Registros>> Listar(Expression<Func<Registros, bool>> criterio)

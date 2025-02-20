@@ -17,6 +17,17 @@
     }
 
     <div class="card-body">
+        @*Id*@
+        <div class="mb-3">
+            <label for="id" class="form-label">AporteId</label>
+            <InputNumber class="form-control" @bind-Value= "Registros.Id" Readonly></InputNumber>
+        </div>
+        @* Fecha *@
+        <div class="mb-3">
+            <label for="Fecha" class="form-label">Fecha:</label>
+            <InputDate id="Fecha" @bind-Value="Registros.Fecha" class="form-control" />
+            <ValidationMessage For="@(() => Registros.Fecha)" />
+        </div>
         @* Nombres *@
         <div class="mb-3">
             <label for="Persona" class="form-label">Persona:</label>
@@ -70,6 +81,12 @@
                 throw new InvalidOperationException("El objeto Registros no está inicializado.");
             }
 
+            bool existe = await RegistroService.ExistePersona(Registros.Persona);
+            if (existe)
+            {
+                errorMessage = "Ya existe un persona con este nombre.";
+                return;
+            }
 
             errorMessage = null;
             bool guardo = await RegistroService.Guardar(Registros);
@@ -85,3 +102,4 @@
         }
     }
 }
+
