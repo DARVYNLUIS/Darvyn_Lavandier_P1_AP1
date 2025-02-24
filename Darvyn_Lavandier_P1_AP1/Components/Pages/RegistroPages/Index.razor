@@ -19,8 +19,9 @@
                     <label for="Filtro" class="form-label">Filtrar por:</label>
                     <select @bind="filtro" class="form-select">
                         <option value="id">ID</option>
-                        <option value="persona">Persona</option> 
+                        <option value="persona">Persona</option>
                         <option value="monto">Monto</option>
+                        <option value="fecha">Fecha</option>
                     </select>
                 </div>
 
@@ -38,6 +39,17 @@
                     <a href="/Registro/Create" class="btn btn-success">
                         <span class="bi bi-plus-lg"></span> Crear
                     </a>
+                </div>
+            </div>
+
+            <div class="row mb-3" id="fechaFiltro" style="display: @(filtro == "fecha" ? "flex" : "none")">
+                <div class="col-md-6">
+                    <label for="Desde" class="form-label"><strong>Desde:</strong></label>
+                    <input type="date" @bind="Desde" class="form-control" />
+                </div>
+                <div class="col-md-6">
+                    <label for="Hasta" class="form-label"><strong>Hasta:</strong></label>
+                    <input type="date" @bind="Hasta" class="form-control" />
                 </div>
             </div>
 
@@ -84,6 +96,8 @@
 @code {
     public Registros Registros = new Registros();
     public List<Registros> ListaRegistros = new List<Registros>();
+    public DateTime? Desde { get; set; } = null;
+    public DateTime? Hasta { get; set; } = null;
     private string filtro = "id";
     private string valorFiltro = "";
 
@@ -99,7 +113,7 @@
 
     private async Task Buscar()
     {
-        if (string.IsNullOrWhiteSpace(valorFiltro))
+        if (string.IsNullOrWhiteSpace(valorFiltro) && filtro != "fecha")
         {
             ListaRegistros = await RegistroService.Listar(p => true);
         }
@@ -124,9 +138,16 @@
                         ListaRegistros = await RegistroService.Listar(p => p.Monto == montoBuscado);
                     }
                     break;
+
+                case "fecha":
+                    if (Desde.HasValue && Hasta.HasValue)
+                    {
+                        ListaRegistros = await RegistroService.Listar(c => c.Fecha >= Desde && c.Fecha <= Hasta);
+                    }
+                    break;
             }
         }
 
-        StateHasChanged(); 
+        StateHasChanged();
     }
 }

@@ -17,6 +17,7 @@ namespace Darvyn_Lavandier_P1_AP1.Models
 
 
         [Required(ErrorMessage = "El monto es obligatorio")]
+        [Range(1, 1000000, ErrorMessage = "El monto debe ser mayor que cero")]  
         public int? Monto { get; set; }
 
     }
